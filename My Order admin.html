@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - ဆန်းသီရီ ကုန်စုံဆိုင်</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Pyidaungsu', 'Myanmar Text', sans-serif;
+    background: #f0f2f5;
+    color: #333;
+    min-height: 100vh;
+  }
+
+  /* ===== LOGIN SCREEN ===== */
+  #loginScreen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #ff6b35, #f7931e);
+    padding: 20px;
+  }
+  .login-box {
+    background: white;
+    padding: 30px 24px;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  }
+  .login-box h1 {
+    text-align: center;
+    color: #ff6b35;
+    margin-bottom: 6px;
+    font-size: 22px;
+  }
+  .login-box p {
+    text-align: center;
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+  .login-box input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ffe0cc;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+  .login-box input:focus {
+    border-color: #ff6b35;
+    outline: none;
+  }
+  .login-box button {
+    width: 100%;
+    background: linear-gradient(135deg, #ff6b35, #f7931e);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .login-error {
+    color: #e53935;
+    font-size: 13px;
+    text-align: center;
+    margin-top: 10px;
+    min-height: 18px;
+  }
+
+  /* ===== MAIN APP ===== */
+  #appScreen { display: none; }
+  header {
+    background: linear-gradient(135deg, #ff6b35, #f7931e);
+    color: white;
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  header h1 { font-size: 17px; }
+  header button {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 13px;
+  }
+
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    padding: 12px;
+    background: white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  }
+  .stat-card {
+    text-align: center;
+    padding: 10px 4px;
+    border-radius: 10px;
+    background: #fff5ee;
+  }
+  .stat-card .num {
+    font-size: 20px;
+    font-weight: bold;
+    color: #ff6b35;
+  }
+  .stat-card .lbl {
+    font-size: 11px;
+    color: #666;
+    margin-top: 2px;
+  }
+
+  .tabs {
+    display: flex;
+    overflow-x: auto;
+    gap: 6px;
+    padding: 12px;
+    background: white;
+    position: sticky;
+    top: 56px;
+    z-index: 90;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  }
+  .tab-btn {
+    padding: 8px 14px;
+    background: white;
+    border: 2px solid #ff6b35;
+    color: #ff6b35;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+  .tab-btn.active { background: #ff6b35; color: white; }
+
+  .container { padding: 12px; max-width: 900px; margin: 0 auto; }
+
+  .order-card {
+    background: white;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 12px;
+    border-left: 5px solid #ff6b35;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .order-card.status-pending { border-left-color: #ff9800; }
+  .order-card.status-confirmed { border-left-color: #2196f3; }
+  .order-card.status-delivering { border-left-color: #9c27b0; }
+  .order-card.status-delivered { border-left-color: #4caf50; }
+  .order-card.status-cancelled { border-left-color: #e53935; }
+
+  .order-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .order-id {
+    font-weight: bold;
+    color: #ff6b35;
+    font-size: 15px;
+  }
+  .order-status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: bold;
+    color: white;
+  }
+  .status-pending { background: #ff9800; }
+  .status-confirmed { background: #2196f3; }
+  .status-delivering { background: #9c27b0; }
+  .status-delivered { background: #4caf50; }
+  .status-cancelled { background: #e53935; }
+
+  .order-info {
+    font-size: 13px;
+    line-height: 1.8;
+    margin: 8px 0;
+    padding: 10px;
+    background: #fafafa;
+    border-radius: 8px;
+  }
+  .order-info strong { color: #555; }
+  .order-info a { color: #2196f3; text-decoration: none; }
+
+  .order-items {
+    background: #fff5ee;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.7;
+    margin: 8px 0;
+  }
+  .order-items strong { color: #ff6b35; }
+
+  .order-total {
+    background: linear-gradient(135deg, #ff6b35, #f7931e);
+    color: white;
+    padding: 10px 14px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    margin: 8px 0;
+    font-size: 15px;
+  }
+
+  .order-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .action-btn {
+    flex: 1;
+    min-width: 100px;
+    padding: 8px 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+  }
+  .btn-confirm { background: #2196f3; }
+  .btn-deliver { background: #9c27b0; }
+  .btn-done { background: #4caf50; }
+  .btn-cancel { background: #e53935; }
+  .btn-call { background: #ff9800; }
+  .btn-map { background: #00897b; }
+  .action-btn:hover { opacity: 0.9; }
+
+  .empty-msg {
+    text-align: center;
+    color: #999;
+    padding: 40px 20px;
+    font-style: italic;
+  }
+
+  .slip-img {
+    max-width: 100px;
+    border-radius: 8px;
+    border: 2px solid #ff6b35;
+    margin: 6px 0;
+    cursor: pointer;
+  }
+
+  /* ===== NOTIFICATION TOAST ===== */
+  #toastContainer {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 500;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 90%;
+    max-width: 400px;
+  }
+  .toast {
+    background: #323232;
+    color: white;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    animation: slideDown 0.3s;
+    border-left: 5px solid #ff6b35;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .toast.success { border-left-color: #4caf50; }
+  .toast.error { border-left-color: #e53935; }
+  .toast.info { border-left-color: #2196f3; }
+  .toast-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Notification banner */
+  .notif-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #4caf50, #2e7d32);
+    color: white;
+    padding: 16px;
+    z-index: 1000;
+    text-align: center;
+    font-weight: bold;
+    font-size: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    animation: slideDown 0.4s;
+    cursor: pointer;
+  }
+  .notif-banner small {
+    display: block;
+    font-weight: normal;
+    font-size: 12px;
+    opacity: 0.95;
+    margin-top: 4px;
+  }
+
+  @media (max-width: 500px) {
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div id="loginScreen">
+  <div class="login-box">
+    <h1> Admin Login</h1>
+    <p>ဆန်းသီရီ ကုန်စုံဆိုင်</p>
+    <input type="email" id="loginEmail" placeholder="Email" value="traderlynn21@gmail.com">
+    <input type="password" id="loginPassword" placeholder="Password">
+    <button onclick="doLogin()">ဝင်မည်</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<div id="appScreen">
+  <header>
+    <h1> Admin Panel</h1>
+    <button onclick="doLogout()"> Logout</button>
+  </header>
+
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="num" id="statPending">0</div>
+      <div class="lbl">စောင့်ဆိုင်း</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="statTotal">0</div>
+      <div class="lbl">အားလုံး</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="statDelivered">0</div>
+      <div class="lbl">ပို့ပြီး</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="statIncome">0</div>
+      <div class="lbl">ဝင်ငွေ(ကျပ်)</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-filter="all" onclick="setFilter('all', this)"> အားလုံး</button>
+    <button class="tab-btn" data-filter="pending" onclick="setFilter('pending', this)"> စောင့်ဆိုင်း</button>
+    <button class="tab-btn" data-filter="confirmed" onclick="setFilter('confirmed', this)"> အတည်ပြု</button>
+    <button class="tab-btn" data-filter="delivering" onclick="setFilter('delivering', this)"> ပို့ဆောင်</button>
+    <button class="tab-btn" data-filter="delivered" onclick="setFilter('delivered', this)"> ပို့ပြီး</button>
+    <button class="tab-btn" data-filter="cancelled" onclick="setFilter('cancelled', this)"> ပယ်ဖျက်</button>
+  </div>
+
+  <div class="container" id="ordersContainer"></div>
+</div>
+
+<div id="toastContainer"></div>
+
+<!-- ===== FIREBASE SDK ===== -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import { getFirestore, collection, query, orderBy, onSnapshot,
+  doc, updateDoc, deleteDoc }
+  from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+import { firebaseConfig } from "./firebase-config.js";
+
+// ===== INIT FIREBASE =====
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// ===== GLOBAL STATE =====
+let allOrders = [];
+let currentFilter = "all";
+let unsubscribeOrders = null;
+let notifiedOrderIds = new Set();
+let audioUnlocked = false;
+
+// ===== TOAST =====
+window.showToast = function(msg, type='info', dur=3000) {
+  const box = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span>${msg}</span><button class="toast-close" onclick="this.parentElement.remove()">&times;</button>`;
+  box.appendChild(t);
+  setTimeout(()=>{ if(t.parentElement) t.remove(); }, dur);
+};
+
+// ===== LOGIN =====
+window.doLogin = async function() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPassword').value;
+  const err = document.getElementById('loginError');
+  err.textContent = '';
+  if (!email || !pass) { err.textContent = 'Email နဲ့ Password ထည့်ပါ'; return; }
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+    window.showToast(' ဝင်ရောက်ပြီးပါပြီ', 'success');
+  } catch (e) {
+    err.textContent = ' Email/Password မှားနေပါသည် (' + (e.code || '') + ')';
+    console.error(e);
+  }
+};
+
+window.doLogout = async function() {
+  if (!confirm('Logout လုပ်မှာသေချာပါသလား?')) return;
+  await signOut(auth);
+};
+
+// ===== AUTH STATE =====
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('appScreen').style.display = 'block';
+    startListeningOrders();
+    requestNotificationPermission();
+  } else {
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('appScreen').style.display = 'none';
+    if (unsubscribeOrders) { unsubscribeOrders(); unsubscribeOrders = null; }
+    allOrders = [];
+  }
+});
+
+// ===== NOTIFICATION =====
+function requestNotificationPermission() {
+  if (!("Notification" in window)) {
+    console.log(' Notification API not supported');
+    return;
+  }
+  if (Notification.permission === "default") {
+    Notification.requestPermission().then(perm => {
+      if (perm === "granted") {
+        window.showToast(" Notification ခွင့်ပြုပြီး", 'success');
+      }
+    });
+  }
+}
+
+function playBeep() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.value = 880;
+    osc.type = 'sine';
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.5);
+    setTimeout(() => { try { ctx.close(); } catch(e){} }, 800);
+  } catch(e) { console.log('Audio error:', e); }
+}
+
+function notifyNewOrder(order) {
+  // Browser notification
+  if ("Notification" in window && Notification.permission === "granted") {
+    try {
+      const n = new Notification(" အော်ဒါအသစ်ဝင်ပါပြီ!", {
+        body: `#${order.id}\n${order.customer?.name || ''} - ${(order.total || 0).toLocaleString()} ကျပ်`,
+        icon: "https://via.placeholder.com/64?text=ST",
+        tag: order.id,
+        requireInteraction: true,
+      });
+      n.onclick = () => { window.focus(); n.close(); };
+    } catch(e) { console.log('Notif error:', e); }
+  }
+  // Beep
+  playBeep();
+  // Banner
+  showNotifBanner(order);
+  // Toast
+  window.showToast(` အော်ဒါအသစ် #${order.id} (${(order.total||0).toLocaleString()} ကျပ်)`, 'success', 5000);
+}
+
+function showNotifBanner(order) {
+  const old = document.getElementById('notifBanner');
+  if (old) old.remove();
+  const banner = document.createElement('div');
+  banner.id = 'notifBanner';
+  banner.className = 'notif-banner';
+  banner.innerHTML = `
+     အော်ဒါအသစ်ဝင်ပါပြီ!
+    <small>#${order.id} - ${order.customer?.name || ''} - ${(order.total||0).toLocaleString()} ကျပ် (နှိပ်ပြီးကြည့်ပါ)</small>
+  `;
+  banner.onclick = () => { banner.remove(); };
+  document.body.appendChild(banner);
+  setTimeout(() => { if (banner.parentElement) banner.remove(); }, 10000);
+}
+
+// ===== LISTEN ORDERS (REALTIME) =====
+function startListeningOrders() {
+  if (unsubscribeOrders) unsubscribeOrders();
+  const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
+  unsubscribeOrders = onSnapshot(q,
+    (snap) => {
+      const prevIds = new Set(allOrders.map(o => o.id));
+      allOrders = [];
+      snap.forEach(docSnap => {
+        const data = docSnap.data();
+        allOrders.push({ id: docSnap.id, ...data });
+      });
+
+      // Detect new orders
+      if (prevIds.size > 0) {
+        allOrders.forEach(o => {
+          if (!prevIds.has(o.id) && !notifiedOrderIds.has(o.id)) {
+            notifiedOrderIds.add(o.id);
+            if (o.status === 'pending') notifyNewOrder(o);
+          }
+        });
+      } else {
+        // First load  add all IDs to avoid spam
+        allOrders.forEach(o => notifiedOrderIds.add(o.id));
+      }
+
+      renderStats();
+      renderOrders();
+    },
+    (err) => {
+      console.error('Firestore listen error:', err);
+      window.showToast(' Firestore error: ' + err.message, 'error', 5000);
+    }
+  );
+}
+
+// ===== STATS =====
+function renderStats() {
+  const pending = allOrders.filter(o => o.status === 'pending').length;
+  const delivered = allOrders.filter(o => o.status === 'delivered').length;
+  const income = allOrders
+    .filter(o => o.status === 'delivered')
+    .reduce((s, o) => s + (o.total || 0), 0);
+
+  document.getElementById('statPending').textContent = pending;
+  document.getElementById('statTotal').textContent = allOrders.length;
+  document.getElementById('statDelivered').textContent = delivered;
+  document.getElementById('statIncome').textContent = income.toLocaleString();
+  document.title = pending > 0 ? `(${pending}) Admin - ဆန်းသီရီ` : 'Admin - ဆန်းသီရီ';
+
+  // Favicon / browser title update
+  if (pending > 0) {
+    document.title = ` (${pending}) Admin - ဆန်းသီရီ`;
+  } else {
+    document.title = 'Admin - ဆန်းသီရီ';
+  }
+}
+
+// ===== FILTER =====
+window.setFilter = function(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderOrders();
+};
+
+// ===== RENDER ORDERS =====
+function renderOrders() {
+  const box = document.getElementById('ordersContainer');
+  let list = allOrders;
+  if (currentFilter !== 'all') list = list.filter(o => o.status === currentFilter);
+
+  if (list.length === 0) {
+    box.innerHTML = '<p class="empty-msg">အော်ဒါမရှိပါ</p>';
+    return;
+  }
+
+  box.innerHTML = list.map(o => renderOrderCard(o)).join('');
+}
+
+function renderOrderCard(o) {
+  const items = (o.items || []).map(i =>
+    ` ${i.name} ${i.qty} = ${(i.price*i.qty).toLocaleString()} ကျပ်`
+  ).join('<br>');
+
+  const statusLabel = {
+    pending: ' စောင့်ဆိုင်း',
+    confirmed: ' အတည်ပြု',
+    delivering: ' ပို့ဆောင်',
+    delivered: ' ပို့ပြီး',
+    cancelled: ' ပယ်ဖျက်'
+  }[o.status] || o.status;
+
+  const createdAt = o.createdAt
+    ? new Date(o.createdAt).toLocaleString('en-GB')
+    : (o.dateStr ? `${o.dateStr} ${o.timeStr || ''}` : '');
+
+  return `
+    <div class="order-card status-${o.status}">
+      <div class="order-head">
+        <span class="order-id">#${o.id}</span>
+        <span class="order-status status-${o.status}">${statusLabel}</span>
+      </div>
+      <div class="order-info">
+        <strong></strong> ${createdAt}<br>
+        <strong></strong> ${o.customer?.name || '-'}<br>
+        <strong></strong> ${o.customer?.phone || '-'}<br>
+        <strong></strong> ${(o.customer?.address || '-').replace(/\n/g, ' ')}<br>
+        <strong></strong> ${o.payment || '-'}
+        ${o.customer?.mapLink ? `<br><strong></strong> <a href="${o.customer.mapLink}" target="_blank">မြေပုံကြည့်</a>` : ''}
+        ${o.note ? `<br><strong></strong> ${o.note}` : ''}
+      </div>
+      ${o.paySlip ? `<img src="${o.paySlip}" class="slip-img" onclick="window.open('${o.paySlip}','_blank')" title="ပြေစာပုံ">` : ''}
+      <div class="order-items">
+        ${items || 'ပစ္စည်းမရှိ'}
+        ${o.discount > 0 ? `<br> Coupon (${o.coupon}): ${o.discount.toLocaleString()} ကျပ်` : ''}
+      </div>
+      <div class="order-total">
+        <span>စုစုပေါင်း</span>
+        <span>${(o.total || 0).toLocaleString()} ကျပ်</span>
+      </div>
+      <div class="order-actions">
+        ${o.customer?.phone ? `<button class="action-btn btn-call" onclick="window.location.href='tel:${o.customer.phone}'"> ဖုန်းဆက်</button>` : ''}
+        ${o.customer?.mapLink ? `<button class="action-btn btn-map" onclick="window.open('${o.customer.mapLink}','_blank')"> မြေပုံ</button>` : ''}
+      </div>
+      <div class="order-actions">
+        ${o.status === 'pending' ? `<button class="action-btn btn-confirm" onclick="updateStatus('${o.id}','confirmed')"> အတည်ပြု</button>` : ''}
+        ${o.status === 'confirmed' ? `<button class="action-btn btn-deliver" onclick="updateStatus('${o.id}','delivering')"> ပို့ဆောင်</button>` : ''}
+        ${o.status === 'delivering' ? `<button class="action-btn btn-done" onclick="updateStatus('${o.id}','delivered')"> ပို့ပြီး</button>` : ''}
+        ${(o.status === 'pending' || o.status === 'confirmed') ? `<button class="action-btn btn-cancel" onclick="cancelOrder('${o.id}')"> ပယ်ဖျက်</button>` : ''}
+        ${(o.status === 'delivered' || o.status === 'cancelled') ? `<button class="action-btn btn-cancel" onclick="deleteOrder('${o.id}')"> ဖျက်</button>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+// ===== UPDATE STATUS =====
+window.updateStatus = async function(id, status) {
+  try {
+    await updateDoc(doc(db, "orders", id), { status });
+    window.showToast(` #${id}  ${status}`, 'success');
+  } catch(e) {
+    console.error(e);
+    window.showToast(' မအောင်မြင်ပါ: ' + e.message, 'error');
+  }
+};
+
+window.cancelOrder = async function(id) {
+  if (!confirm(`#${id} ကို ပယ်ဖျက်မှာသေချာပါသလား?`)) return;
+  await window.updateStatus(id, 'cancelled');
+};
+
+window.deleteOrder = async function(id) {
+  if (!confirm(`#${id} ကို အပြီးဖျက်မှာသေချာပါသလား? (ပြန်မရနိုင်ပါ)`)) return;
+  try {
+    await deleteDoc(doc(db, "orders", id));
+    window.showToast(` #${id} ဖျက်ပြီး`, 'info');
+  } catch(e) {
+    window.showToast(' ' + e.message, 'error');
+  }
+};
+
+// ===== Audio unlock (user interaction လိုတယ်) =====
+document.addEventListener('click', () => {
+  if (!audioUnlocked) {
+    audioUnlocked = true;
+    // unlock AudioContext
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      ctx.resume().then(()=>ctx.close());
+    } catch(e){}
+  }
+}, { once: true });
+</script>
+
+</body>
+</html>
