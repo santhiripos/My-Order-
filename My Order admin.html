@@ -3,69 +3,157 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>My Shop - God Tier Admin</title>
+<title>My Order Shop - Admin</title>
 <style>
-  :root { --primary: #00F0FF; --secondary: #7000FF; --bg: #09090b; --card-bg: #18181b; --text: #f4f4f5; --text-light: #a1a1aa; --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --border: #27272a; --shadow: 0 10px 30px -10px rgba(0,0,0,0.8); }
+  :root {
+    --primary: #00F0FF;
+    --secondary: #7000FF;
+    --bg: #09090b;
+    --card-bg: #18181b;
+    --text: #f4f4f5;
+    --text-light: #a1a1aa;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --border: #27272a;
+    --shadow: 0 10px 30px -10px rgba(0,0,0,0.8);
+  }
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pyidaungsu', sans-serif; }
   body { background: var(--bg); color: var(--text); padding-bottom: 50px; }
-  header { background: rgba(24, 24, 27, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: 16px; text-align: center; position: sticky; top: 0; z-index: 100; }
-  header h1 { font-size: 20px; font-weight: 900; letter-spacing: 1px; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  
+  header {
+    background: rgba(24, 24, 27, 0.8); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border); padding: 16px; text-align: center;
+    position: sticky; top: 0; z-index: 100; display: flex; justify-content: center; align-items: center; gap: 10px;
+  }
+  .logo-3d-admin {
+    width: 35px; height: 35px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
+    box-shadow: 0 0 10px var(--primary);
+  }
+  header h1 {
+    font-size: 20px; font-weight: 900; letter-spacing: 1px;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
   .container { max-width: 900px; margin: 0 auto; padding: 20px 15px; }
-  .tabs { display: flex; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 5px; margin-bottom: 20px; }
-  .tab-btn { flex: 1; padding: 12px; border: none; background: transparent; font-weight: bold; color: var(--text-light); border-radius: 8px; transition: 0.3s; cursor: pointer; font-size: 14px; }
+  
+  .tabs {
+    display: flex; background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 5px; margin-bottom: 20px;
+  }
+  .tab-btn {
+    flex: 1; padding: 12px; border: none; background: transparent;
+    font-weight: bold; color: var(--text-light); border-radius: 8px;
+    transition: 0.3s; cursor: pointer; font-size: 14px;
+  }
   .tab-btn.active { background: var(--border); color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-  .form-card { background: var(--card-bg); border: 1px solid var(--border); padding: 20px; border-radius: 16px; box-shadow: var(--shadow); margin-bottom: 20px; }
+
+  .form-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    padding: 20px; border-radius: 16px; box-shadow: var(--shadow); margin-bottom: 20px;
+  }
   .form-group { margin-bottom: 15px; }
   .form-group label { display: block; font-size: 13px; font-weight: bold; color: var(--text-light); margin-bottom: 6px; }
-  .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: white; outline:none; }
+  .form-group input, .form-group select {
+    width: 100%; padding: 12px; border: 1px solid var(--border);
+    border-radius: 8px; background: var(--bg); color: white; outline:none;
+  }
   .form-group input:focus { border-color: var(--primary); }
-  .submit-btn { width: 100%; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; padding: 14px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 15px; }
-  .table-responsive { overflow-x: auto; background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow); }
+  .submit-btn {
+    width: 100%; background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white; border: none; padding: 14px; border-radius: 10px;
+    font-weight: bold; cursor: pointer; font-size: 15px;
+  }
+
+  .table-responsive {
+    overflow-x: auto; background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 16px; box-shadow: var(--shadow);
+  }
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
   th, td { padding: 15px 12px; text-align: left; border-bottom: 1px solid var(--border); }
   th { background: rgba(255,255,255,0.02); color: var(--text-light); font-weight: bold; }
   tr:last-child td { border-bottom: none; }
-  .action-btn { padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; color: white; cursor: pointer; margin-right: 5px; font-weight: bold; }
-  .btn-edit { background: #3b82f6; } .btn-del { background: var(--danger); } .btn-approve { background: var(--success); } .btn-reject { background: var(--danger); } .btn-point { background: var(--warning); color: #000; }
-  .prod-item { display: flex; gap: 15px; background: var(--card-bg); border: 1px solid var(--border); padding: 12px; border-radius: 12px; margin-bottom: 12px; align-items: center; }
+  .action-btn {
+    padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px;
+    color: white; cursor: pointer; margin-right: 5px; font-weight: bold;
+  }
+  .btn-edit { background: #3b82f6; }
+  .btn-del { background: var(--danger); }
+  .btn-approve { background: var(--success); }
+  .btn-reject { background: var(--danger); }
+  .btn-point { background: var(--warning); color: #000; }
+
+  .prod-item {
+    display: flex; gap: 15px; background: var(--card-bg); border: 1px solid var(--border);
+    padding: 12px; border-radius: 12px; margin-bottom: 12px; align-items: center;
+  }
   .prod-item img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; }
-  .prod-info { flex: 1; } .prod-info strong { font-size: 15px; display: block; margin-bottom: 4px; } .prod-info small { color: var(--primary); font-weight: bold; }
-  .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; color: white; }
+  .prod-info { flex: 1; }
+  .prod-info strong { font-size: 15px; display: block; margin-bottom: 4px; }
+  .prod-info small { color: var(--primary); font-weight: bold; }
+
+  .loading-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+    z-index: 1000; flex-direction: column; align-items: center; justify-content: center; color: white;
+  }
   .loading-overlay.active { display: flex; }
-  .spinner { width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+  .spinner {
+    width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1);
+    border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite;
+  }
   @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
 
-<header><h1> Admin - God Mode</h1></header>
+<header>
+  <div class="logo-3d-admin">⚙️</div>
+  <h1>Admin - My Order Shop</h1>
+</header>
 
 <div class="container">
   <div class="tabs">
-    <button class="tab-btn active" id="tab-prod" onclick="switchTab('prod')"> ပစ္စည်းများ</button>
-    <button class="tab-btn" id="tab-order" onclick="switchTab('order')"> အော်ဒါများ</button>
-    <button class="tab-btn" id="tab-user" onclick="switchTab('user')"> Point စီမံခန့်ခွဲမှု</button>
+    <button class="tab-btn active" id="tab-prod" onclick="window.switchTab('prod')">📦 ပစ္စည်းများ</button>
+    <button class="tab-btn" id="tab-order" onclick="window.switchTab('order')">📋 အော်ဒါများ</button>
+    <button class="tab-btn" id="tab-user" onclick="window.switchTab('user')">👥 Point စီမံခန့်ခွဲမှု</button>
   </div>
 
   <div id="section-prod">
     <div class="form-card">
-      <h3 style="margin-bottom: 15px; font-size: 16px;" id="formTitle"> ပစ္စည်းအသစ်ထည့်</h3>
+      <h3 style="margin-bottom: 15px; font-size: 16px;" id="formTitle">➕ ပစ္စည်းအသစ်ထည့်</h3>
       <input type="hidden" id="editId">
       <div class="form-group"><label>အမည်</label><input type="text" id="prodName" placeholder="ပစ္စည်းအမည်"></div>
       <div class="form-group"><label>ဈေးနှုန်း</label><input type="number" id="prodPrice" placeholder="ကျပ်"></div>
       <div class="form-group"><label>အမျိုးအစား</label><input type="text" id="prodCat" placeholder="ဥပမာ - ဆန်၊ ဆီ"></div>
-      <div class="form-group"><label>ပုံ (Image)</label><input type="file" id="prodImg" accept="image/*" onchange="compressImg(event)"><div id="imgPreview" style="margin-top:10px;"></div></div>
-      <button class="submit-btn" onclick="saveProduct()"> သိမ်းမည်</button>
+      <div class="form-group">
+        <label>ပုံ (Image)</label>
+        <input type="file" id="prodImg" accept="image/*" onchange="window.compressImg(event)">
+        <div id="imgPreview" style="margin-top:10px;"></div>
+      </div>
+      <button class="submit-btn" onclick="window.saveProduct()">💾 သိမ်းမည်</button>
     </div>
     <div id="prodList"></div>
   </div>
 
   <div id="section-order" style="display: none;">
-    <div class="table-responsive"><table><thead><tr><th>Customer</th><th>စုစုပေါင်း</th><th>အခြေအနေ</th><th>လုပ်ဆောင်ချက်</th></tr></thead><tbody id="orderTableBody"></tbody></table></div>
+    <div class="table-responsive">
+      <table>
+        <thead><tr><th>Customer</th><th>စုစုပေါင်း</th><th>အခြေအနေ</th><th>လုပ်ဆောင်ချက်</th></tr></thead>
+        <tbody id="orderTableBody"></tbody>
+      </table>
+    </div>
   </div>
 
   <div id="section-user" style="display: none;">
-    <div class="table-responsive"><table><thead><tr><th>ဖုန်းနံပါတ်</th><th>လက်ရှိ Point</th><th>Point ပြောင်းလဲရန်</th></tr></thead><tbody id="userTableBody"></tbody></table></div>
+    <div class="table-responsive">
+      <table>
+        <thead><tr><th>ဖုန်းနံပါတ်</th><th>လက်ရှိ Point</th><th>Point ပြောင်းလဲရန်</th></tr></thead>
+        <tbody id="userTableBody"></tbody>
+      </table>
+    </div>
   </div>
 </div>
 
@@ -75,8 +163,16 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-//  Key များကို သီးသန့်ဖိုင်ကနေ လှမ်းယူခြင်း 
-import { firebaseConfig, IMGBB_API_KEY } from './firebase-config.js';
+// ★★★ API KEY များ တိုက်ရိုက်ထည့်သွင်းပြီး ★★★
+const firebaseConfig = {
+  apiKey: "AIzaSyA_SZAbdqlxhzFqOcL8hGwjG9tV-mGB7Do",
+  authDomain: "my-order26.firebaseapp.com",
+  projectId: "my-order26",
+  storageBucket: "my-order26.firebasestorage.app",
+  messagingSenderId: "304096237962",
+  appId: "1:304096237962:web:dd4165c956342a21f1d073"
+};
+const IMGBB_API_KEY = "01481dd06c4370b1def012ded89b01a2";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -95,12 +191,14 @@ window.switchTab = (tab) => {
   if(tab === 'user') loadUsers();
 };
 
+// Image Compression
 function compressImage(file, maxWidth = 800, quality = 0.7) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = event => {
-      const img = new Image(); img.src = event.target.result;
+      const img = new Image();
+      img.src = event.target.result;
       img.onload = () => {
         const canvas = document.createElement('canvas');
         let width = img.width; let height = img.height;
@@ -116,46 +214,118 @@ function compressImage(file, maxWidth = 800, quality = 0.7) {
 }
 
 window.compressImg = async (e) => {
-  const file = e.target.files[0]; if(!file) return;
+  const file = e.target.files[0];
+  if(!file) return;
   compressedBase64 = await compressImage(file, 500, 0.7);
   document.getElementById('imgPreview').innerHTML = `<img src="${compressedBase64}" style="height: 60px; border-radius: 5px;">`;
 };
 
 async function uploadToImgBB(base64) {
-  const fd = new FormData(); fd.append('image', base64.split(',')[1]);
+  const fd = new FormData();
+  fd.append('image', base64.split(',')[1]);
   const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: fd });
-  const data = await res.json(); if (!data.success) throw new Error('Upload failed');
+  const data = await res.json();
+  if (!data.success) throw new Error('Upload failed');
   return data.data.url;
 }
 
 window.saveProduct = async () => {
-  const id = document.getElementById('editId').value, name = document.getElementById('prodName').value;
-  const price = parseInt(document.getElementById('prodPrice').value), cat = document.getElementById('prodCat').value;
+  const id = document.getElementById('editId').value;
+  const name = document.getElementById('prodName').value;
+  const price = parseInt(document.getElementById('prodPrice').value);
+  const cat = document.getElementById('prodCat').value;
+
   if(!name || !price || !cat) return alert("အချက်အလက်အပြည့်ဖြည့်ပါ");
+
   document.getElementById('loadingOverlay').classList.add('active');
   try {
-    let imgUrl = ""; if(compressedBase64) imgUrl = await uploadToImgBB(compressedBase64);
-    if (id) { const updateData = { name, price, cat }; if(imgUrl) updateData.img = imgUrl; await updateDoc(doc(db, "products", id), updateData); }
-    else { if(!imgUrl) throw new Error("ပုံတင်ပါ"); await addDoc(collection(db, "products"), { name, price, cat, img: imgUrl }); }
-    document.getElementById('editId').value = ""; document.getElementById('prodName').value = ""; document.getElementById('prodPrice').value = ""; document.getElementById('prodCat').value = ""; document.getElementById('imgPreview').innerHTML = ""; compressedBase64 = ""; document.getElementById('formTitle').innerText = " ပစ္စည်းအသစ်ထည့်"; loadProducts(); alert(" သိမ်းပြီးပါပြီ");
-  } catch (err) { alert(" Error: " + err.message); } finally { document.getElementById('loadingOverlay').classList.remove('active'); }
+    let imgUrl = "";
+    if(compressedBase64) imgUrl = await uploadToImgBB(compressedBase64);
+
+    if (id) {
+      const updateData = { name, price, cat };
+      if(imgUrl) updateData.img = imgUrl;
+      await updateDoc(doc(db, "products", id), updateData);
+    } else {
+      if(!imgUrl) throw new Error("ပုံတင်ပါ");
+      await addDoc(collection(db, "products"), { name, price, cat, img: imgUrl });
+    }
+    
+    document.getElementById('editId').value = "";
+    document.getElementById('prodName').value = "";
+    document.getElementById('prodPrice').value = "";
+    document.getElementById('prodCat').value = "";
+    document.getElementById('imgPreview').innerHTML = "";
+    compressedBase64 = "";
+    document.getElementById('formTitle').innerText = "➕ ပစ္စည်းအသစ်ထည့်";
+    loadProducts();
+    alert("✅ သိမ်းပြီးပါပြီ");
+  } catch (err) {
+    alert("❌ Error: " + err.message);
+  } finally {
+    document.getElementById('loadingOverlay').classList.remove('active');
+  }
 };
 
 async function loadProducts() {
-  const snap = await getDocs(collection(db, "products")); const box = document.getElementById('prodList'); box.innerHTML = "";
-  snap.forEach(d => { const p = d.data(); box.innerHTML += `<div class="prod-item"><img src="${p.img}" onerror="this.src='https://via.placeholder.com/50'"><div class="prod-info"><strong>${p.name}</strong><small>${p.price.toLocaleString()} ကျပ် (${p.cat})</small></div><button class="action-btn btn-edit" onclick="editProduct('${d.id}')">Edit</button><button class="action-btn btn-del" onclick="deleteProduct('${d.id}')">Del</button></div>`; });
+  const snap = await getDocs(collection(db, "products"));
+  const box = document.getElementById('prodList');
+  box.innerHTML = "";
+  snap.forEach(d => {
+    const p = d.data();
+    box.innerHTML += `
+      <div class="prod-item">
+        <img src="${p.img}" onerror="this.src='https://via.placeholder.com/50'">
+        <div class="prod-info"><strong>${p.name}</strong><small>${p.price.toLocaleString()} ကျပ် (${p.cat})</small></div>
+        <button class="action-btn btn-edit" onclick="window.editProduct('${d.id}')">Edit</button>
+        <button class="action-btn btn-del" onclick="window.deleteProduct('${d.id}')">Del</button>
+      </div>
+    `;
+  });
 }
 
 window.editProduct = async (id) => {
   const snap = await getDocs(collection(db, "products"));
-  snap.forEach(d => { if(d.id === id) { const p = d.data(); document.getElementById('editId').value = id; document.getElementById('prodName').value = p.name; document.getElementById('prodPrice').value = p.price; document.getElementById('prodCat').value = p.cat; document.getElementById('imgPreview').innerHTML = `<img src="${p.img}" style="height: 60px; border-radius:5px;">`; document.getElementById('formTitle').innerText = " ပစ္စည်းပြင်ဆင်"; } });
+  snap.forEach(d => {
+    if(d.id === id) {
+      const p = d.data();
+      document.getElementById('editId').value = id;
+      document.getElementById('prodName').value = p.name;
+      document.getElementById('prodPrice').value = p.price;
+      document.getElementById('prodCat').value = p.cat;
+      document.getElementById('imgPreview').innerHTML = `<img src="${p.img}" style="height: 60px; border-radius:5px;">`;
+      document.getElementById('formTitle').innerText = "✏️ ပစ္စည်းပြင်ဆင်";
+    }
+  });
 };
 
-window.deleteProduct = async (id) => { if(!confirm("ဖျက်မှာသေချာပါသလား?")) return; await deleteDoc(doc(db, "products", id)); loadProducts(); };
+window.deleteProduct = async (id) => {
+  if(!confirm("ဖျက်မှာသေချာပါသလား?")) return;
+  await deleteDoc(doc(db, "products", id));
+  loadProducts();
+};
 
 async function loadOrders() {
-  const snap = await getDocs(collection(db, "orders")); const tbody = document.getElementById('orderTableBody'); tbody.innerHTML = "";
-  snap.forEach(d => { const o = d.data(); let statusColor = o.status === 'pending' ? '#f59e0b' : (o.status === 'approved' ? '#10b981' : '#ef4444'); tbody.innerHTML += `<tr><td>${o.customer.name}<br><small>${o.customer.phone}</small></td><td>${o.total.toLocaleString()} Ks</td><td><span style="color:${statusColor}; font-weight:bold;">${o.status}</span></td><td>${o.status === 'pending' ? `<button class="action-btn btn-approve" onclick="approveOrder('${d.id}', '${o.customer.phone}', ${o.total})"> အတည်ပြု</button><button class="action-btn btn-reject" onclick="updateOrderStatus('${d.id}', 'rejected')"> ပယ်ဖျက်</button>` : ''}</td></tr>`; });
+  const snap = await getDocs(collection(db, "orders"));
+  const tbody = document.getElementById('orderTableBody');
+  tbody.innerHTML = "";
+  snap.forEach(d => {
+    const o = d.data();
+    let statusColor = o.status === 'pending' ? '#f59e0b' : (o.status === 'approved' ? '#10b981' : '#ef4444');
+    tbody.innerHTML += `
+      <tr>
+        <td>${o.customer.name}<br><small>${o.customer.phone}</small></td>
+        <td>${o.total.toLocaleString()} Ks</td>
+        <td><span style="color:${statusColor}; font-weight:bold;">${o.status}</span></td>
+        <td>
+          ${o.status === 'pending' ? `
+            <button class="action-btn btn-approve" onclick="window.approveOrder('${d.id}', '${o.customer.phone}', ${o.total})">✅ အတည်ပြု</button>
+            <button class="action-btn btn-reject" onclick="window.updateOrderStatus('${d.id}', 'rejected')">❌ ပယ်ဖျက်</button>
+          ` : ''}
+        </td>
+      </tr>
+    `;
+  });
 }
 
 window.approveOrder = async (orderId, phone, total) => {
@@ -163,34 +333,70 @@ window.approveOrder = async (orderId, phone, total) => {
   document.getElementById('loadingOverlay').classList.add('active');
   try {
     await updateDoc(doc(db, "orders", orderId), { status: 'approved' });
+    
     const earnedPoints = Math.floor(total / 1000);
     if(earnedPoints > 0) {
       const userQuery = query(collection(db, "users"), where("phone", "==", phone));
       const userSnap = await getDocs(userQuery);
-      if (!userSnap.empty) { const userDoc = userSnap.docs[0]; const currentPoints = userDoc.data().points || 0; await updateDoc(doc(db, "users", userDoc.id), { points: currentPoints + earnedPoints }); }
-      else { await addDoc(collection(db, "users"), { phone: phone, points: earnedPoints }); }
+      
+      if (!userSnap.empty) {
+        const userDoc = userSnap.docs[0];
+        const currentPoints = userDoc.data().points || 0;
+        await updateDoc(doc(db, "users", userDoc.id), { points: currentPoints + earnedPoints });
+      } else {
+        await addDoc(collection(db, "users"), { phone: phone, points: earnedPoints });
+      }
     }
-    loadOrders(); alert(` အတည်ပြုပြီး။ ${earnedPoints} Points ပေါင်းထည့်ပြီးပါပြီ။`);
-  } catch(e) { alert("Error: " + e.message); } finally { document.getElementById('loadingOverlay').classList.remove('active'); }
+    
+    loadOrders();
+    alert(`✅ အတည်ပြုပြီး။ ${earnedPoints} Points ပေါင်းထည့်ပြီးပါပြီ။`);
+  } catch(e) {
+    alert("Error: " + e.message);
+  } finally {
+    document.getElementById('loadingOverlay').classList.remove('active');
+  }
 };
 
-window.updateOrderStatus = async (id, status) => { await updateDoc(doc(db, "orders", id), { status }); loadOrders(); };
+window.updateOrderStatus = async (id, status) => {
+  await updateDoc(doc(db, "orders", id), { status });
+  loadOrders();
+};
 
 async function loadUsers() {
-  const snap = await getDocs(collection(db, "users")); const tbody = document.getElementById('userTableBody'); tbody.innerHTML = "";
-  if(snap.empty) { tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">User မရှိသေးပါ</td></tr>`; return; }
-  snap.forEach(d => { const u = d.data(); tbody.innerHTML += `<tr><td>${u.phone}</td><td><strong style="color:var(--warning);">${u.points || 0} Pts</strong></td><td><button class="action-btn btn-point" onclick="adjustPoints('${d.id}', 10)">+10</button><button class="action-btn btn-del" onclick="adjustPoints('${d.id}', -10)">-10</button></td></tr>`; });
+  const snap = await getDocs(collection(db, "users"));
+  const tbody = document.getElementById('userTableBody');
+  tbody.innerHTML = "";
+  if(snap.empty) {
+    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">User မရှိသေးပါ</td></tr>`;
+    return;
+  }
+  snap.forEach(d => {
+    const u = d.data();
+    tbody.innerHTML += `
+      <tr>
+        <td>${u.phone}</td>
+        <td><strong style="color:var(--warning);">${u.points || 0} Pts</strong></td>
+        <td>
+          <button class="action-btn btn-point" onclick="window.adjustPoints('${d.id}', 10)">+10</button>
+          <button class="action-btn btn-del" onclick="window.adjustPoints('${d.id}', -10)">-10</button>
+        </td>
+      </tr>
+    `;
+  });
 }
 
 window.adjustPoints = async (userId, amount) => {
   const userRef = doc(db, "users", userId);
-  const snap = await getDocs(collection(db, "users")); let current = 0;
+  const snap = await getDocs(collection(db, "users"));
+  let current = 0;
   snap.forEach(d => { if(d.id === userId) current = d.data().points || 0; });
+  
   const newPoints = Math.max(0, current + amount);
-  await updateDoc(userRef, { points: newPoints }); loadUsers();
+  await updateDoc(userRef, { points: newPoints });
+  loadUsers();
 };
 
 loadProducts();
 </script>
 </body>
-</html>
+  </html>
